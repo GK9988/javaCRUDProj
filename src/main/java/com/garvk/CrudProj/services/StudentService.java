@@ -1,6 +1,7 @@
 package com.garvk.CrudProj.services;
 
 import com.garvk.CrudProj.models.Student;
+import com.garvk.CrudProj.repositories.ResultDto;
 import com.garvk.CrudProj.repositories.StudentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,5 +57,39 @@ public class StudentService {
 
     public List<Student> getAllStudents() {
         return studentRepo.findAll();
+    }
+
+    public ResultDto getResult(int aInId) {
+        Student lStudent = studentRepo.findById(aInId).orElse(null);
+
+        if(null == lStudent){
+            throw new IllegalArgumentException("No Student with Id: " + aInId + " Found");
+        }
+
+        return generateResult(lStudent);
+
+
+    }
+
+    private ResultDto generateResult(Student aInStudent){
+        ResultDto lResultDto = new ResultDto();
+
+        lResultDto.setName(aInStudent.getName());
+        lResultDto.setUid(aInStudent.getUid());
+        lResultDto.setCourseMap(aInStudent.getMarksSet());
+
+        calculateResult(lResultDto);
+
+        return lResultDto;
+    }
+
+    private void calculateResult(ResultDto aInResultDto){
+        int totalMarks = 0;
+
+        for(Integer marks: aInResultDto.getCourseMap().values()){
+            totalMarks += marks;
+        }
+
+        aInResultDto.setCgpa((float) (totalMarks) / (aInResultDto.getCourseMap().size() * 10));
     }
 }
