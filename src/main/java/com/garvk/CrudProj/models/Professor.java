@@ -8,8 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashMap;
-import java.util.List;
 
 @Entity
 @Data
@@ -25,5 +23,5 @@ public class Professor {
 
     private String email;
 
-    List<String> Courses;
+    private String course;
 }
